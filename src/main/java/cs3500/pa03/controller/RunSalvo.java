@@ -36,6 +36,7 @@ public class RunSalvo implements ControlSalvo {
 
   private int maxShips;
 
+
   /**
    * Constructs a controller object using the given players and view module
    *
@@ -51,11 +52,18 @@ public class RunSalvo implements ControlSalvo {
     aiPlayer = new AiPlayer(aiShotReport);
   }
 
+  @Override
+  public void run() {
+    this.intro();
+    this.fleetSelection();
+    this.runSalvo();
+  }
+
+
   /**
    * Welcomes the user into the game and asks/accepts board dimensions
    */
-  @Override
-  public void intro() {
+  private void intro() {
     view.displayWelcome();
     int height = -1;
     int width = -1;
@@ -81,8 +89,7 @@ public class RunSalvo implements ControlSalvo {
    * Tells the player which types of ships are available and the limitations on number, and accepts
    * numbers of ships
    */
-  @Override
-  public void fleetSelection() {
+  private void fleetSelection() {
     maxShips = Math.min(height, width);
     view.displayFleetSelection(maxShips);
     int[] shipNums;
@@ -143,9 +150,10 @@ public class RunSalvo implements ControlSalvo {
     return allShipTypes && notTooMany;
   }
 
-
-  @Override
-  public void runSalvo() {
+  /**
+   * Runs the main game loop for the console player
+   */
+  private void runSalvo() {
     while (!isGameOver()) {
       // display the current state of the board
       view.displayGame(consoleShotReport.getGameBoard(), aiShotReport.getGameBoard());
@@ -170,6 +178,12 @@ public class RunSalvo implements ControlSalvo {
     this.detectWinner();
   }
 
+  /**
+   * Asks for, validates, and stores user input for shots fired at opponents ships
+   *
+   * @param numShips the int number of ships corresponds to the number of shots the player has
+   * @return the list of coords of shot locations take from user input
+   */
   private ArrayList<Coord> shotProcedure(int numShips) {
     ArrayList<Coord> shots = takeShotInput(numShips);
 
@@ -180,6 +194,12 @@ public class RunSalvo implements ControlSalvo {
     return shots;
   }
 
+  /**
+   * Asks the user for input on shot locations
+   *
+   * @param numShips int representing number of ships and therefore number of shots
+   * @return List of coords representing the user's missiles locations
+   */
   private ArrayList<Coord> takeShotInput(int numShips) {
     ArrayList<Coord> shots = new ArrayList<>();
     int count = 0;
@@ -217,12 +237,22 @@ public class RunSalvo implements ControlSalvo {
     return result;
   }
 
+  /**
+   * Ensures that the user fires no more than the un-guessed spaces on the board
+   *
+   * @param numShips number of shots the user has in this volley
+   * @param shotReport the enemy's shot report to find the number of un-guessed spaces
+   * @return int representing the actual number of shots the user can fire
+   */
   private int limitShots(int numShips, ShotReport shotReport) {
     int emptySpaces = shotReport.getGameBoard().getEmptySpaces();
     return Math.min(numShips, emptySpaces);
 
   }
 
+  /**
+   * Determines a winner of the game and displays the correct information
+   */
   private void detectWinner() {
     if (consoleShotReport.getNumShips() == 0 && aiShotReport.getNumShips() == 0) {
       consolePlayer.endGame(GameResult.TIE, "Both player's ships are sunk!");
@@ -239,10 +269,13 @@ public class RunSalvo implements ControlSalvo {
     }
   }
 
-  @Override
-  public boolean isGameOver() {
+  /**
+   * Determines if the game is over by testing both fleet's for damage/sunkenness
+   *
+   * @return boolean: true if game ended in some way; false otherwise
+   */
+  private boolean isGameOver() {
     return (consoleShotReport.getNumShips() == 0) || (aiShotReport.getNumShips() == 0);
   }
 
-  // Use mock Models with  to test single method user inputs
 }

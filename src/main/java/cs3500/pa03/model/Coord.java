@@ -1,5 +1,8 @@
 package cs3500.pa03.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a coordinate on the game board
  */
@@ -13,7 +16,9 @@ public class Coord {
    * @param xcoord int corresponding to the x coord of this object
    * @param ycoord int corresponding to the y coord of this object
    */
-  public Coord(int xcoord, int ycoord) {
+  @JsonCreator
+  public Coord(@JsonProperty("x") int xcoord,
+               @JsonProperty("y") int ycoord) {
     this.xcoord = xcoord;
     this.ycoord = ycoord;
   }

@@ -8,7 +8,9 @@ import java.util.ArrayList;
 public class ShotReport {
   private ArrayList<Coord> shots = new ArrayList<>();
   private int numShips;
+  private ArrayList<Ship> fleet;
   private GameBoard gameBoard;
+
 
   /**
    * Gives the list of coordinates that represents the users shots for this round
@@ -60,6 +62,24 @@ public class ShotReport {
         numShips++;
       }
     }
+  }
+
+  /**
+   * Returns the fleet saved by this ShotReport
+   *
+   * @return ArrayLis of ships that represent this shot report's ships
+   */
+  public ArrayList<Ship> getFleet() {
+    return new ArrayList<>(fleet);
+  }
+
+  /**
+   * Updates the fleet with the given list of ships
+   *
+   * @param fleet the new list of ships to represent this shot report's fleet
+   */
+  public void setFleet(ArrayList<Ship> fleet) {
+    this.fleet = fleet;
   }
 
   /**

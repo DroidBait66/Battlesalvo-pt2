@@ -16,8 +16,6 @@ public class BattleSalvo {
    * Starts the BattleSalvo game
    */
   public void run() {
-    controller.intro();
-    controller.fleetSelection();
-    controller.runSalvo();
+    controller.run();
   }
 }

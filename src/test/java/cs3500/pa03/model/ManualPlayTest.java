@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 class ManualPlayTest {
@@ -28,7 +29,7 @@ class ManualPlayTest {
     ShotReport shotReport = new ShotReport();
     ManualPlay player = new ManualPlay(null, shotReport, null);
     player.setup(6, 6, numShips);
-    assertEquals(6, player.getFleet().size());
+    assertEquals(6, shotReport.getFleet().size());
 
   }
 
@@ -78,9 +79,24 @@ class ManualPlayTest {
     Coord coord2 = ships.get(1).getCoords().get(0);
     ArrayList<Coord> expected = new ArrayList<>(Arrays.asList(coord1, coord2));
     ArrayList<Coord> damageShots = new ArrayList<>(expected);
-    damageShots.add(new Coord(14, 14));
+    damageShots.add(this.findUnusedCoord(ships));
 
     assertEquals(expected, player.reportDamage(damageShots));
+  }
+
+  private Coord findUnusedCoord(ArrayList<Ship> ships) {
+    ArrayList<Coord> allShipSegments = new ArrayList<>();
+    for (Ship ship : ships) {
+      allShipSegments.addAll(ship.getCoords());
+    }
+    Random random = new Random();
+    int x = 14;
+    int y = 14;
+    while (allShipSegments.contains(new Coord(x,y))) {
+      x = random.nextInt(15);
+      y = random.nextInt(15);
+    }
+    return new Coord(x, y);
   }
 
   @Test
