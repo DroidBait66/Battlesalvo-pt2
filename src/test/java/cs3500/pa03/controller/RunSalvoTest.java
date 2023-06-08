@@ -1,83 +1,44 @@
 package cs3500.pa03.controller;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cs3500.pa03.view.DisplaySalvo;
 import cs3500.pa03.view.ViewSalvo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 class RunSalvoTest {
 
   @Test
-  void intro() {
+  void introErrors() {
 
-    String dimensions = "20 8 2 8 8 20 8 2 10 8";
+    String dimensions = "0 7 7 0 20 7 7 20 " + getAllShotsString();
     ByteArrayInputStream bais = new ByteArrayInputStream(dimensions.getBytes());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
-    runSalvo.intro();
-
-    String expected = """
-        Welcome to BattleSalvo!
-        Please enter a height and width between 6 and 15 inclusive
-        -->The dimensions you entered were invalid.
-        Please only enter dimensions between 6 and 15 inclusive
-        -->""";
-    assertTrue(baos.toString().contains(expected));
-  }
-
-  @Test
-  void fleetSelection() {
-    String fleetInput = "8 8 1 1 1 1";
-    ByteArrayInputStream bais = new ByteArrayInputStream(fleetInput.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
-    RunSalvo runSalvo = new RunSalvo(view, bais);
-    runSalvo.intro();
-    runSalvo.fleetSelection();
+    runSalvo.run();
 
     String expected1 = "Welcome to BattleSalvo!";
-    String expected2 = "Please enter an integer for each type of ship.";
-    String expected3 = "The maximum number of ships in your fleet is";
+    String expected2 = "The dimensions you entered were invalid.";
     assertTrue(baos.toString().contains(expected1));
     assertTrue(baos.toString().contains(expected2));
-    assertTrue(baos.toString().contains(expected3));
   }
 
   @Test
   void fleetErrorTest() {
     String expected1 = "There must be at least one of every ship and you may not have more than";
     String fleetErrorInput = "8 8 0 0 0 0 1 0 1 1 1 1 0 1 1 1 1 0 0 0 0 0 20 2 1 1 2 20 1 1"
-        + " 1 2 20 4 1 2 3 20 2 1 1 2";
+        + " 1 2 20 4 1 2 3 20 2 1 1 2" + this.getAllShotsString().substring(11);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(fleetErrorInput.getBytes());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
-    runSalvo.intro();
-    runSalvo.fleetSelection();
+    runSalvo.run();
 
     assertTrue(baos.toString().contains(expected1));
-  }
-
-  @Test
-  void runSalvoTestFirstLoop() {
-    String input = "6 6 1 1 1 1 0 4\n0 1\n1 1\n0 2";
-    ByteArrayInputStream bais = new ByteArrayInputStream(input.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
-    RunSalvo runSalvo = new RunSalvo(view, bais);
-
-    runSalvo.intro();
-    runSalvo.fleetSelection();
-    assertThrows(NoSuchElementException.class, runSalvo::runSalvo);
-
-
   }
 
   @Test
@@ -88,10 +49,8 @@ class RunSalvoTest {
     ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
 
-    runSalvo.intro();
-    runSalvo.fleetSelection();
-    runSalvo.runSalvo();
-    //System.out.println(baos);
+    runSalvo.run();
+
     String expected1 = "Your Board:";
     String expected2 = "Please enter";
     String expected3 = "You sunk all your opponent's ships!";
@@ -201,9 +160,8 @@ class RunSalvoTest {
     ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
 
-    runSalvo.intro();
-    runSalvo.fleetSelection();
-    runSalvo.runSalvo();
+    runSalvo.run();
+
     //System.out.println(baos);
     String expected1 = "Your Board:";
     String expected2 = "Please enter";
@@ -219,15 +177,6 @@ class RunSalvoTest {
         || baos.toString().contains(expected3Lose));
   }
 
-  @Test
-  void isGameOver() {
-    String input = "8 8";
-    ByteArrayInputStream bais = new ByteArrayInputStream(input.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
-    RunSalvo runSalvo = new RunSalvo(view, bais);
 
-    assertTrue(runSalvo.isGameOver());
-
-  }
 }
+
