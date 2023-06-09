@@ -6,17 +6,29 @@ import cs3500.pa03.view.DisplaySalvo;
 import cs3500.pa03.view.ViewSalvo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RunSalvoTest {
+  private String inputs = this.getAllShotsString();
+  private ByteArrayInputStream bais = new ByteArrayInputStream(inputs.getBytes());
+  private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private ViewSalvo view = new DisplaySalvo(baos);
+  private RunSalvo runSalvo = new RunSalvo(view, bais);
+
+  @BeforeEach
+  void setUp() {
+    inputs = this.getAllShotsString();
+    bais = new ByteArrayInputStream(inputs.getBytes());
+    baos = new ByteArrayOutputStream();
+    view = new DisplaySalvo(baos);
+    runSalvo = new RunSalvo(view, bais);
+  }
 
   @Test
   void introErrors() {
-
     String dimensions = "0 7 7 0 20 7 7 20 " + getAllShotsString();
     ByteArrayInputStream bais = new ByteArrayInputStream(dimensions.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
     runSalvo.run();
 
@@ -28,28 +40,21 @@ class RunSalvoTest {
 
   @Test
   void fleetErrorTest() {
-    String expected1 = "There must be at least one of every ship and you may not have more than";
-    String fleetErrorInput = "8 8 0 0 0 0 1 0 1 1 1 1 0 1 1 1 1 0 0 0 0 0 20 2 1 1 2 20 1 1"
-        + " 1 2 20 4 1 2 3 20 2 1 1 2" + this.getAllShotsString().substring(11);
+
+    String fleetErrorInput = "6 6 0 0 0 0 1 0 1 1 1 1 0 1 1 1 1 0 0 0 0 0 20 2 1 1 2 20 1 1"
+        + " 1 2 20 4 1 2 3 20 2 1 1 2 " + this.inputs.substring(12);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(fleetErrorInput.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
     runSalvo.run();
 
+    String expected1 = "There must be at least one of every ship and you may not have more than";
     assertTrue(baos.toString().contains(expected1));
   }
 
   @Test
-  void runSalvoDetectWinner() {
-    String input = this.getAllShotsString();
-    ByteArrayInputStream bais = new ByteArrayInputStream(input.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
-    RunSalvo runSalvo = new RunSalvo(view, bais);
-
-    runSalvo.run();
+  void runSalvoTest() {
+    this.runSalvo.run();
 
     String expected1 = "Your Board:";
     String expected2 = "Please enter";
@@ -156,19 +161,17 @@ class RunSalvoTest {
   void runSalvoInvalidSalvo() {
     String input = this.getAllShotsStringWithInvalid();
     ByteArrayInputStream bais = new ByteArrayInputStream(input.getBytes());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ViewSalvo view = new DisplaySalvo(baos);
     RunSalvo runSalvo = new RunSalvo(view, bais);
 
     runSalvo.run();
 
-    //System.out.println(baos);
     String expected1 = "Your Board:";
     String expected2 = "Please enter";
     String expectedInvalid = "ome value you entered is invalid";
     assertTrue(baos.toString().contains(expected1));
     assertTrue(baos.toString().contains(expected2));
     assertTrue(baos.toString().contains(expectedInvalid));
+
     String expected3Tie = "Both player's ships are sunk!";
     String expected3Lose = "Your opponent sunk your ships!";
     String expected3 = "You sunk all your opponent's ships!";
