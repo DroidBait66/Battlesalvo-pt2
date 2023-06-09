@@ -179,12 +179,17 @@ public class ProxyController implements ControlSalvo {
   }
 
   private void handleSuccessfulHits(JsonNode args) {
+    CoordinatesJson coordinatesJson = mapper.convertValue(args, CoordinatesJson.class);
+    List<Coord> successfulHits = coordinatesJson.shots();
+    player.successfulHits(successfulHits);
 
+    MessageJson successfulHitsResponseMessage =
+        new MessageJson("successful-hits", null);
+    JsonNode responseJson = JsonUtils.serializeRecord(successfulHitsResponseMessage);
+    this.output.println(responseJson);
   }
 
   private void handleEndGame(JsonNode args) {
 
   }
-
-
 }
