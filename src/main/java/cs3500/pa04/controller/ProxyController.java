@@ -102,8 +102,10 @@ public class ProxyController implements ControlSalvo {
 
     // List of our ships -- needs to be converted to server's ship type
     List<Ship> ships = player.setup(height, width, numShips);
+
     // Ships in the form the server uses
     List<ShipAdapter> adaptedShips = convertShips(ships);
+
     // fleet in its specific Json Record
     FleetJson fleet = new FleetJson(adaptedShips);
 
@@ -144,6 +146,9 @@ public class ProxyController implements ControlSalvo {
     return convertedShips;
   }
 
+  /**
+   * Gives the server our salvo
+   */
   private void handleTakeShots() {
     // if we want to show the game as it progresses, this would be the place to call view display
     // game methods
