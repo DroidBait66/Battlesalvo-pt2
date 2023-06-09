@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs3500.pa03.controller.ControlSalvo;
 import cs3500.pa03.model.Coord;
+import cs3500.pa03.model.GameResult;
 import cs3500.pa03.model.Player;
 import cs3500.pa03.model.Ship;
 import cs3500.pa03.model.ShipType;
 import cs3500.pa04.ShipAdapter;
 import cs3500.pa04.json.CoordinatesJson;
+import cs3500.pa04.json.EndGameJson;
 import cs3500.pa04.json.FleetJson;
 import cs3500.pa04.json.FleetSpecJson;
 import cs3500.pa04.json.JoinJson;
@@ -178,6 +180,11 @@ public class ProxyController implements ControlSalvo {
     this.output.println(reportDamageResponse);
   }
 
+  /**
+   * Takes in the successful hits from the server and processes them locally
+   *
+   * @param args the JsonNode object that stores the location of your shots that hit an opponents ship
+   */
   private void handleSuccessfulHits(JsonNode args) {
     CoordinatesJson coordinatesJson = mapper.convertValue(args, CoordinatesJson.class);
     List<Coord> successfulHits = coordinatesJson.shots();
@@ -189,7 +196,19 @@ public class ProxyController implements ControlSalvo {
     this.output.println(responseJson);
   }
 
+  /**
+   * Handles a game over state when given the args by the server
+   *
+   * @param args the JsonNode object that stores the result of the game according to the server
+   */
   private void handleEndGame(JsonNode args) {
+    EndGameJson endGameJson = mapper.convertValue(args, EndGameJson.class);
+    GameResult gameResult = endGameJson.gameResult();
+    String reason = endGameJson.reason();
+    player.endGame(gameResult, reason);
 
+    MessageJson gameOver = new MessageJson("end-game", null);
+    JsonNode responseJson = JsonUtils.serializeRecord(gameOver);
+    this.output.println(responseJson);
   }
 }
