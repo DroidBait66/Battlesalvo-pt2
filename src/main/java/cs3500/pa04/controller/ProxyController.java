@@ -161,6 +161,11 @@ public class ProxyController implements ControlSalvo {
     this.output.println(takeShotsMessage);
   }
 
+  /**
+   * Takes in the opponents shots from the server and records what ships have been damaged
+   *
+   * @param args the JsonNode object that stores the location of the server player's shots
+   */
   private void handleReportDamage(JsonNode args) {
 
   }
