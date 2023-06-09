@@ -108,7 +108,7 @@ class AiPlayerTest {
     // this method does nothing -- testing for nothingness?
     ShotReport shotReport = new ShotReport();
     AiPlayer player = new AiPlayer(shotReport);
-    player.endGame(GameResult.TIE, "all ships destroyed");
+    player.endGame(GameResult.DRAW, "all ships destroyed");
     assertEquals(shotReport.getNumShips(), new ShotReport().getNumShips());
   }
 }

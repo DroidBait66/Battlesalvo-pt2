@@ -15,5 +15,5 @@ public enum GameResult {
   /**
    * Represents tying a BattleSalvo game
    */
-  TIE
+  DRAW
 }

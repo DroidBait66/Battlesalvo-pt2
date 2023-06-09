@@ -113,8 +113,8 @@ class DisplaySalvoTest {
 
   @Test
   void displayEndOfGame() {
-    String expected = "The game has ended in a TIE\nBecause both players sunk all ships\n";
-    display.displayEndOfGame(GameResult.TIE, "both players sunk all ships");
+    String expected = "The game has ended in a DRAW\nBecause both players sunk all ships\n";
+    display.displayEndOfGame(GameResult.DRAW, "both players sunk all ships");
     assertEquals(expected, baos.toString());
   }
 }

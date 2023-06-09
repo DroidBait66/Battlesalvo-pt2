@@ -255,9 +255,9 @@ public class RunSalvo implements ControlSalvo {
    */
   private void detectWinner() {
     if (consoleShotReport.getNumShips() == 0 && aiShotReport.getNumShips() == 0) {
-      consolePlayer.endGame(GameResult.TIE, "Both player's ships are sunk!");
-      view.displayEndOfGame(GameResult.TIE, "Both player's ships are sunk!");
-      aiPlayer.endGame(GameResult.TIE, "Both player's ships are sunk!");
+      consolePlayer.endGame(GameResult.DRAW, "Both player's ships are sunk!");
+      view.displayEndOfGame(GameResult.DRAW, "Both player's ships are sunk!");
+      aiPlayer.endGame(GameResult.DRAW, "Both player's ships are sunk!");
     } else if (consoleShotReport.getNumShips() == 0) {
       consolePlayer.endGame(GameResult.LOSE, "Your opponent sunk your ships!");
       view.displayEndOfGame(GameResult.LOSE, "Your opponent sunk your ships!");
