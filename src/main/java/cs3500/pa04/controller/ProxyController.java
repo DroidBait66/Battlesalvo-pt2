@@ -86,6 +86,11 @@ public class ProxyController implements ControlSalvo {
     this.output.println(outputJson);
   }
 
+  /**
+   * Sends the server our setup fleet
+   *
+   * @param args the JsonNode object that holds the specific about board and fleet size
+   */
   private void handleSetUp(JsonNode args) {
     SetupJson setup = mapper.convertValue(args, SetupJson.class);
     FleetSpecJson fleetSpec = mapper.convertValue(setup.fleetSpec(), FleetSpecJson.class);
