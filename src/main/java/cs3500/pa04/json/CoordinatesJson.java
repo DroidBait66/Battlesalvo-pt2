@@ -5,7 +5,7 @@ import cs3500.pa03.model.Coord;
 import java.util.List;
 
 public record CoordinatesJson(
-    @JsonProperty("shots") List<Coord> shots) {
+    @JsonProperty("coordinates") List<Coord> shots) {
 
 
 }
