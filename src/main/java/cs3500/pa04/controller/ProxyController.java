@@ -4,13 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs3500.pa03.controller.ControlSalvo;
 import cs3500.pa03.model.Player;
+import cs3500.pa03.model.Ship;
+import cs3500.pa03.model.ShipType;
+import cs3500.pa04.ShipAdapter;
+import cs3500.pa04.json.FleetJson;
+import cs3500.pa04.json.FleetSpecJson;
 import cs3500.pa04.json.JoinJson;
 import cs3500.pa04.json.JsonUtils;
 import cs3500.pa04.json.MessageJson;
+import cs3500.pa04.json.SetupJson;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Controls a game between an external server and a player object
@@ -54,20 +63,14 @@ public class ProxyController implements ControlSalvo {
     String methodName = messageJson.methodName();
     JsonNode arguments = messageJson.arguments();
 
-    if (methodName.equals("join")) {
-      this.handleJoin();
-    } else if (methodName.equals("setup")) {
-      this.handleSetUp(arguments);
-    } else if (methodName.equals("take-shots")) {
-      this.handleTakeShots();
-    } else if (methodName.equals("report-damage")) {
-      this.handleReportDamage(arguments);
-    } else if (methodName.equals("successful-hits")) {
-      this.handleSuccessfulHits(arguments);
-    } else if (methodName.equals("end-game")) {
-      this.handleEndGame(arguments);
-    } else {
-      throw new IllegalArgumentException("Method name not supported");
+    switch (methodName) {
+      case "join" -> this.handleJoin();
+      case "setup" -> this.handleSetUp(arguments);
+      case "take-shots" -> this.handleTakeShots();
+      case "report-damage" -> this.handleReportDamage(arguments);
+      case "successful-hits" -> this.handleSuccessfulHits(arguments);
+      case "end-game" -> this.handleEndGame(arguments);
+      default -> throw new IllegalArgumentException("Method name not supported");
     }
   }
 
@@ -84,7 +87,52 @@ public class ProxyController implements ControlSalvo {
   }
 
   private void handleSetUp(JsonNode args) {
+    SetupJson setup = mapper.convertValue(args, SetupJson.class);
+    FleetSpecJson fleetSpec = mapper.convertValue(setup.fleetSpec(), FleetSpecJson.class);
+    int height = setup.height();
+    int width = setup.width();
+    HashMap<ShipType, Integer> numShips = this.createShipMap(fleetSpec);
 
+    // List of our ships -- needs to be converted to server's ship type
+    List<Ship> ships = player.setup(height, width, numShips);
+    // Ships in the form the server uses
+    List<ShipAdapter> adaptedShips = convertShips(ships);
+    // fleet in its specific Json Record
+    FleetJson fleet = new FleetJson(adaptedShips);
+
+    // Serializing and sending the response to the server
+    JsonNode fleetResponse = JsonUtils.serializeRecord(fleet);
+    this.output.println(fleetResponse);
+  }
+
+  /**
+   * Creates a hashmap of the ships using inputs from the server
+   *
+   * @param fleetSpec FleetSpecJson given by the server, read previously with a object mapper
+   * @return a HashMap of ShipType and Integer
+   */
+  private HashMap<ShipType, Integer> createShipMap(FleetSpecJson fleetSpec) {
+    HashMap<ShipType, Integer> result = new HashMap<>();
+    result.put(ShipType.CARRIER, fleetSpec.carriers());
+    result.put(ShipType.BATTLESHIP, fleetSpec.battleships());
+    result.put(ShipType.DESTROYER, fleetSpec.destroyers());
+    result.put(ShipType.SUBMARINE, fleetSpec.submarines());
+    return result;
+  }
+
+  /**
+   * Converts them into the ship adapter, which is stored like the server
+   *
+   * @param ships the list of ships created from our setup method
+   * @return a list of ShipAdapters that have the form the server uses
+   */
+  private List<ShipAdapter> convertShips(List<Ship> ships) {
+    ArrayList<ShipAdapter> convertedShips = new ArrayList<>();
+    for (Ship ship : ships) {
+      ShipAdapter newShip = new ShipAdapter(ship);
+      convertedShips.add(newShip);
+    }
+    return convertedShips;
   }
 
   private void handleTakeShots() {
