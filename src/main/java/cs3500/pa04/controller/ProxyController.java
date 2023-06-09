@@ -119,7 +119,7 @@ public class ProxyController implements ControlSalvo {
   /**
    * Creates a hashmap of the ships using inputs from the server
    *
-   * @param fleetSpec FleetSpecJson given by the server, read previously with a object mapper
+   * @param fleetSpec FleetSpecJson given by the server, read previously with an object mapper
    * @return a HashMap of ShipType and Integer
    */
   private HashMap<ShipType, Integer> createShipMap(FleetSpecJson fleetSpec) {
@@ -167,7 +167,15 @@ public class ProxyController implements ControlSalvo {
    * @param args the JsonNode object that stores the location of the server player's shots
    */
   private void handleReportDamage(JsonNode args) {
+    CoordinatesJson coordinatesJson = mapper.convertValue(args, CoordinatesJson.class);
+    List<Coord> opponentsShots = coordinatesJson.shots();
+    List<Coord> opponentHits = player.reportDamage(opponentsShots);
 
+    CoordinatesJson oppHitsJson = new CoordinatesJson(opponentHits);
+    JsonNode hitsResponse = JsonUtils.serializeRecord(oppHitsJson);
+    MessageJson oppHitsMessage = new MessageJson("report-damage", hitsResponse);
+    JsonNode reportDamageResponse = JsonUtils.serializeRecord(oppHitsMessage);
+    this.output.println(reportDamageResponse);
   }
 
   private void handleSuccessfulHits(JsonNode args) {
