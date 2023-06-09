@@ -3,10 +3,12 @@ package cs3500.pa04.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs3500.pa03.controller.ControlSalvo;
+import cs3500.pa03.model.Coord;
 import cs3500.pa03.model.Player;
 import cs3500.pa03.model.Ship;
 import cs3500.pa03.model.ShipType;
 import cs3500.pa04.ShipAdapter;
+import cs3500.pa04.json.CoordinatesJson;
 import cs3500.pa04.json.FleetJson;
 import cs3500.pa04.json.FleetSpecJson;
 import cs3500.pa04.json.JoinJson;
@@ -107,7 +109,9 @@ public class ProxyController implements ControlSalvo {
 
     // Serializing and sending the response to the server
     JsonNode fleetResponse = JsonUtils.serializeRecord(fleet);
-    this.output.println(fleetResponse);
+    MessageJson fleetResponseMessage = new MessageJson("setup", fleetResponse);
+    JsonNode messageOutput = JsonUtils.serializeRecord(fleetResponseMessage);
+    this.output.println(messageOutput);
   }
 
   /**
@@ -141,7 +145,15 @@ public class ProxyController implements ControlSalvo {
   }
 
   private void handleTakeShots() {
+    // if we want to show the game as it progresses, this would be the place to call view display
+    // game methods
 
+    List<Coord> shots = player.takeShots();
+    CoordinatesJson volleyJson = new CoordinatesJson(shots);
+    JsonNode takeShotsResponse = JsonUtils.serializeRecord(volleyJson);
+    MessageJson shotsMessageJson = new MessageJson("take-shots", takeShotsResponse);
+    JsonNode takeShotsMessage = JsonUtils.serializeRecord(shotsMessageJson);
+    this.output.println(takeShotsMessage);
   }
 
   private void handleReportDamage(JsonNode args) {
