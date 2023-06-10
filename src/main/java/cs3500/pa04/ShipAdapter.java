@@ -10,33 +10,33 @@ import java.util.ArrayList;
  * Converts ships into ones that store starting location, length, and direction
  */
 public class ShipAdapter {
-  private final Coord start;
+  private final Coord coord;
   private final int length;
-  private final Direction dir;
+  private final Direction direction;
 
   /**
    * Converts the given ship into a ship adapter, that stores same ship with different info
    */
   public ShipAdapter(Ship ship) {
-    this.start = ship.getCoords().get(0);
+    this.coord = ship.getCoords().get(0);
     this.length = ship.getCoords().size();
-    this.dir = findOrientation(ship.getCoords());
+    this.direction = findOrientation(ship.getCoords());
   }
 
   /**
    * Creates a new shipAdapter with the given args, allows Jackson to create JSON ship objects
    *
-   * @param start the starting coordinate of the ship
+   * @param coord the starting coordinate of the ship
    * @param length the number of coords that the ship takes up
-   * @param dir the direction/orientation of the ship (either horizontal or vertical)
+   * @param direction the direction/orientation of the ship (either horizontal or vertical)
    */
   @JsonCreator
-  public ShipAdapter(@JsonProperty("coord") Coord start,
+  public ShipAdapter(@JsonProperty("coord") Coord coord,
                      @JsonProperty("length") int length,
-                     @JsonProperty("direction") Direction dir) {
-    this.start = start;
+                     @JsonProperty("direction") Direction direction) {
+    this.coord = coord;
     this.length = length;
-    this.dir = dir;
+    this.direction = direction;
   }
 
   /**
@@ -59,8 +59,8 @@ public class ShipAdapter {
    *
    * @return Coord representing the starting location of the ship
    */
-  public Coord getStart() {
-    return this.start;
+  public Coord getCoord() {
+    return this.coord;
   }
 
   /**
@@ -77,8 +77,8 @@ public class ShipAdapter {
    *
    * @return the direction that the ship is facing
    */
-  public Direction getDir() {
-    return this.dir;
+  public Direction getDirection() {
+    return this.direction;
   }
 
 }

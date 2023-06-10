@@ -1,6 +1,7 @@
 package cs3500.pa04;
 
 import cs3500.pa03.BattleSalvo;
+import java.io.IOException;
 
 /**
  * This is the main driver of this project.
@@ -25,9 +26,16 @@ public class Driver {
       BattleSalvo battleSalvo = new BattleSalvo();
       battleSalvo.run();
     } else {
+
       String host = args[0];
       int port = Integer.parseInt(args[1]);
       // run the proxy controller
+      RunClient runClient = new RunClient();
+      try {
+        runClient.run(host, port);
+      } catch (IOException e) {
+        System.out.println("An Error occurred while connecting to the server");
+      }
     }
 
 
