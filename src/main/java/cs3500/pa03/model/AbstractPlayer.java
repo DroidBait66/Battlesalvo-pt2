@@ -9,12 +9,32 @@ import java.util.Random;
  * Abstraction of the Player interface implementations to reduce code duplication
  */
 public abstract class AbstractPlayer implements Player {
+  /**
+   * The height of the game board for this player's game
+   */
   protected int height;
+  /**
+   * The width of the game board for this player's game
+   */
   protected int width;
+  /**
+   * The GameBoard object on which the ship and shot data is stored
+   */
   protected GameBoard gameBoard;
+  /**
+   * The object which stores shot and ship information
+   */
   protected final ShotReport shotReport;
+  /**
+   * The list of ships of this player
+   */
   protected ArrayList<Ship> fleet;
 
+  /**
+   * Creates a new Player with the given ShotReport object
+   *
+   * @param shotReport the report object to access shot information
+   */
   public AbstractPlayer(ShotReport shotReport) {
     this.shotReport = shotReport;
   }

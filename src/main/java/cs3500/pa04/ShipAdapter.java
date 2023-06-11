@@ -16,6 +16,8 @@ public class ShipAdapter {
 
   /**
    * Converts the given ship into a ship adapter, that stores same ship with different info
+   *
+   * @param ship the Ship object to be adapted into the server's ship format
    */
   public ShipAdapter(Ship ship) {
     this.coord = ship.getCoords().get(0);
