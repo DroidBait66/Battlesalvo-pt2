@@ -3,6 +3,9 @@ package cs3500.pa04.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * A class of static methods to facilitate conversion from Java records to JSON objects
+ */
 public class JsonUtils {
 
   /**

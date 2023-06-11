@@ -92,7 +92,7 @@ class ManualPlayTest {
     Random random = new Random();
     int x = 14;
     int y = 14;
-    while (allShipSegments.contains(new Coord(x,y))) {
+    while (allShipSegments.contains(new Coord(x, y))) {
       x = random.nextInt(15);
       y = random.nextInt(15);
     }

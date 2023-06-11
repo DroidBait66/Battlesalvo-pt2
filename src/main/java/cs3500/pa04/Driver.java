@@ -7,13 +7,13 @@ import java.io.IOException;
  * This is the main driver of this project.
  */
 public class Driver {
+
   /**
    * Project entry point
    *
    * @param args - no command line args required
    */
   public static void main(String[] args) {
-
     /*
      * if no command line args, battleSalvo should function exactly like pa03
      *

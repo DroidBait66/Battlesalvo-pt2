@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Abstraction of the Player interface implementations to reduce code duplication
+ */
 public abstract class AbstractPlayer implements Player {
   protected int height;
   protected int width;

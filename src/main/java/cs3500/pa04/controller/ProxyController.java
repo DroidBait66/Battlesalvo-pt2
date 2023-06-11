@@ -194,7 +194,8 @@ public class ProxyController implements ControlSalvo {
   /**
    * Takes in the successful hits from the server and processes them locally
    *
-   * @param args the JsonNode object that stores the location of your shots that hit an opponents ship
+   * @param args the JsonNode object that stores the location of your shots that hit an opponents
+   ship
    */
   private void handleSuccessfulHits(JsonNode args) {
     CoordinatesJson coordinatesJson = mapper.convertValue(args, CoordinatesJson.class);
