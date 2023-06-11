@@ -60,9 +60,9 @@ public class ProxyController implements ControlSalvo {
       JsonParser parser = this.mapper.getFactory().createParser(this.input);
 
       while (!this.server.isClosed()) {
-        System.out.println("inside run while");
         MessageJson messageJson = parser.readValueAs(MessageJson.class);
         this.delegateMessage(messageJson);
+
       }
     } catch (IOException e) {
       //throw new RuntimeException("An Error occurred while connecting to the server");
@@ -76,7 +76,7 @@ public class ProxyController implements ControlSalvo {
    */
   private void delegateMessage(MessageJson messageJson) {
     String methodName = messageJson.methodName();
-    System.out.println(methodName);
+    //System.out.println(methodName);
     JsonNode arguments = messageJson.arguments();
 
     switch (methodName) {
@@ -108,13 +108,11 @@ public class ProxyController implements ControlSalvo {
    * @param args the JsonNode object that holds the specific about board and fleet size
    */
   private void handleSetUp(JsonNode args) {
-    System.out.println("inside handleSetUp");
     SetupJson setup = mapper.convertValue(args, SetupJson.class);
     FleetSpecJson fleetSpec = mapper.convertValue(setup.fleetSpec(), FleetSpecJson.class);
     int height = setup.height();
     int width = setup.width();
     HashMap<ShipType, Integer> numShips = this.createShipMap(fleetSpec);
-
     // List of our ships -- needs to be converted to server's ship type
     List<Ship> ships = player.setup(height, width, numShips);
 
@@ -126,7 +124,7 @@ public class ProxyController implements ControlSalvo {
 
     // Serializing and sending the response to the server
     JsonNode fleetResponse = JsonUtils.serializeRecord(fleet);
-    System.out.println(fleetResponse.toString());
+
     MessageJson fleetResponseMessage = new MessageJson("setup", fleetResponse);
     JsonNode messageOutput = JsonUtils.serializeRecord(fleetResponseMessage);
     this.output.println(messageOutput);
@@ -168,7 +166,6 @@ public class ProxyController implements ControlSalvo {
   private void handleTakeShots() {
     // if we want to show the game as it progresses, this would be the place to call view display
     // game methods
-    System.out.println("inside handelTakeShots");
     List<Coord> shots = player.takeShots();
     CoordinatesJson volleyJson = new CoordinatesJson(shots);
     JsonNode takeShotsResponse = JsonUtils.serializeRecord(volleyJson);
